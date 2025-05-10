@@ -17,6 +17,13 @@
 extern int total_cpu_time;
 extern int total_dispatch_time;
 
+extern int task_count;
+extern char *metric_names[];
+extern int metric_arrival[];
+extern int metric_start[];
+extern int metric_finish[];
+extern int metric_burst[];
+
 #define SIZE    100
 
 int main(int argc, char *argv[])
@@ -52,6 +59,30 @@ int main(int argc, char *argv[])
     double util = (double)total_cpu_time * 100.0 /
                   (total_cpu_time + total_dispatch_time);
     printf("CPU Utilization: %.2f%%\n", util);
+
+    printf("\n...|");
+    for (int i = 0; i < task_count; i++) {
+        printf(" %2s |", metric_names[i]);
+    }
+    printf("\n");
+    printf("TAT|");
+    for (int i = 0; i < task_count; i++) {
+        int tat = metric_finish[i] - metric_arrival[i];
+        printf(" %2d |", tat);
+    }
+    printf("\n");
+    printf("WT |");
+    for (int i = 0; i < task_count; i++) {
+        int wt = (metric_finish[i] - metric_arrival[i]) - metric_burst[i];
+        printf(" %2d |", wt);
+    }
+    printf("\n");
+    printf("RT |");
+    for (int i = 0; i < task_count; i++) {
+        int rt = metric_start[i] - metric_arrival[i];
+        printf(" %2d |", rt);
+    }
+    printf("\n");
 
     return 0;
 }

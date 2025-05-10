@@ -7,6 +7,13 @@
 #include "schedulers.h"
 #include "cpu.h"
 
+extern int task_count;
+extern char *metric_names[];
+extern int metric_arrival[];
+extern int metric_start[];
+extern int metric_finish[];
+extern int metric_burst[];
+
 #define QUANTUM 10
 
 struct node *g_head = NULL;
@@ -16,6 +23,17 @@ void add(char *name, int priority, int burst) {
     task->name = strdup(name);
     task->priority = priority;
     task->burst = burst;
+    task->original_burst = burst;
+    task->arrival_time = 0;
+    task->start_time = -1;
+    task->finish_time = -1;
+    task->tid = task_count;
+    metric_names[task_count] = task->name;
+    metric_arrival[task_count] = 0;
+    metric_burst[task_count] = burst;
+    metric_start[task_count] = -1;
+    metric_finish[task_count] = -1;
+    task_count++;
     insert(&g_head, task);
 }
 
@@ -61,12 +79,18 @@ void schedule() {
             for (int i = 0; i < n; i++) {
                 if (tasks[i] && tasks[i]->priority == maxPrio && tasks[i]->burst > 0) {
                     int slice = tasks[i]->burst > QUANTUM ? QUANTUM : tasks[i]->burst;
+                    if (metric_start[tasks[i]->tid] < 0) {
+                        metric_start[tasks[i]->tid] = currentTime;
+                    }
                     run(tasks[i], slice);
                     tasks[i]->burst -= slice;
                     currentTime += slice;
+                    if (tasks[i]->burst == 0) {
+                        metric_finish[tasks[i]->tid] = currentTime;
+                    }
                     printf("\tTime is now: %d\n", currentTime);
                     if (tasks[i]->burst == 0) {
-                        free(tasks[i]->name);
+                        // free(tasks[i]->name);
                         free(tasks[i]);
                         tasks[i] = NULL;
                         remaining--;

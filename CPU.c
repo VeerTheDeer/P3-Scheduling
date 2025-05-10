@@ -12,6 +12,15 @@ int total_cpu_time = 0;
 int total_dispatch_time = 0;
 static int run_count = 0;
 
+// Metrics for TAT, WT, RT
+#define MAX_TASKS 100
+int task_count = 0;
+char *metric_names[MAX_TASKS];
+int metric_arrival[MAX_TASKS];
+int metric_start[MAX_TASKS];
+int metric_finish[MAX_TASKS];
+int metric_burst[MAX_TASKS];
+
 // run this task for the specified time slice
 void run(Task *task, int slice) {
     // dispatch cost (1 unit) before each run after the first

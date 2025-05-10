@@ -7,6 +7,13 @@
 #include "schedulers.h"
 #include "cpu.h"
 
+extern int task_count;
+extern char *metric_names[];
+extern int metric_arrival[];
+extern int metric_start[];
+extern int metric_finish[];
+extern int metric_burst[];
+
 struct node *g_head = NULL;
 
 // add a task to the list
@@ -15,6 +22,17 @@ void add(char *name, int priority, int burst) {
     task->name = strdup(name);
     task->priority = priority;
     task->burst = burst;
+    task->original_burst = burst;
+    task->arrival_time = 0;
+    task->start_time = -1;
+    task->finish_time = -1;
+    task->tid = task_count;
+    metric_names[task_count] = task->name;
+    metric_arrival[task_count] = 0;
+    metric_burst[task_count] = burst;
+    metric_start[task_count] = -1;
+    metric_finish[task_count] = -1;
+    task_count++;
     // Append to end of the list for FCFS order
     struct node *new_node = malloc(sizeof(struct node));
     new_node->task = task;
@@ -48,10 +66,20 @@ void schedule() {
     Task *task;
     int currentTime = 0;
     while ((task = pickNextTask()) != NULL) {
+        if (metric_start[task->tid] < 0) {
+            metric_start[task->tid] = currentTime;
+        }
         run(task, task->burst);
         currentTime += task->burst;
+        if (task->burst == 0) {
+            metric_finish[task->tid] = currentTime;
+        }
+        else if (task->burst > 0) {
+            // FCFS always runs to completion
+            metric_finish[task->tid] = currentTime;
+        }
         printf("\tTime is now: %d\n", currentTime);
-        free(task->name);
+        // free(task->name);
         free(task);
     }
 }

@@ -13,6 +13,9 @@
 #include "task.h"
 #include "list.h"
 #include "schedulers.h"
+#include "cpu.h"
+extern int total_cpu_time;
+extern int total_dispatch_time;
 
 #define SIZE    100
 
@@ -44,6 +47,11 @@ int main(int argc, char *argv[])
 
     // invoke the scheduler
     schedule();
+
+    // output CPU utilization including dispatcher cost
+    double util = (double)total_cpu_time * 100.0 /
+                  (total_cpu_time + total_dispatch_time);
+    printf("CPU Utilization: %.2f%%\n", util);
 
     return 0;
 }

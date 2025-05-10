@@ -1,6 +1,11 @@
 /**
  * Various list operations
  */
+/**
+ * list.c
+ * Utility functions for managing linked lists of Task nodes.
+ * Provides insert, delete, and traverse operations.
+ */
  
 #include <stdlib.h>
 #include <stdio.h>
@@ -10,7 +15,12 @@
 #include "task.h"
 
 
-// add a new task to the list of tasks
+/**
+ * insert
+ * Insert a new Task node at the head of the list.
+ * @param head      Pointer to list head pointer
+ * @param newTask   Task to insert
+ */
 void insert(struct node **head, Task *newTask) {
     // add the new task to the list 
     struct node *newNode = malloc(sizeof(struct node));
@@ -20,7 +30,12 @@ void insert(struct node **head, Task *newTask) {
     *head = newNode;
 }
 
-// delete the selected task from the list
+/**
+ * delete
+ * Remove a specific Task from the list by matching name.
+ * @param head      Pointer to list head pointer
+ * @param task      Task to remove
+ */
 void delete(struct node **head, Task *task) {
     struct node *temp;
     struct node *prev;
@@ -43,7 +58,11 @@ void delete(struct node **head, Task *task) {
     }
 }
 
-// traverse the list
+/**
+ * traverse
+ * Print all tasks in the list for debugging purposes.
+ * @param head      Head of the list to traverse
+ */
 void traverse(struct node *head) {
     struct node *temp;
     temp = head;

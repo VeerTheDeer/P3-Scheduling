@@ -1,4 +1,9 @@
 /**
+ * task.h
+ * Defines the Task struct for the scheduling simulation.
+ * Tracks a task's name, ID, priority, burst length, and timing metrics.
+ */
+/**
  * Representation of a task in the system.
  */
 

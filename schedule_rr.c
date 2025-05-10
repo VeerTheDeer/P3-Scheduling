@@ -1,3 +1,8 @@
+/**
+ * schedule_rr.c
+ * Implements Round Robin scheduling.
+ * add(): enqueue tasks in arrival order; schedule(): execute in fixed quantums.
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,6 +23,11 @@ extern int metric_burst[];
 
 struct node *g_head = NULL;
 
+/**
+ * add
+ * Create a Task and append it to the round-robin queue.
+ * Initializes timing metrics for later reporting.
+ */
 void add(char *name, int priority, int burst) {
     Task *task = malloc(sizeof(Task));
     task->name = strdup(name);
@@ -49,6 +59,11 @@ void add(char *name, int priority, int burst) {
     }
 }
 
+/**
+ * schedule
+ * Execute the Round Robin scheduling loop until all tasks complete.
+ * Records each task's start and finish times for metrics.
+ */
 void schedule() {
     // move tasks to an array for round-robin
     Task *tasks[100];

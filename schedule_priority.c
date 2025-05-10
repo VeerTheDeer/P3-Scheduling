@@ -1,3 +1,8 @@
+/**
+ * schedule_priority.c
+ * Implements Priority scheduling (non-preemptive).
+ * add(): enqueue tasks with metadata; schedule(): execute by highest priority.
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,6 +21,11 @@ extern int metric_burst[];
 
 struct node *g_head = NULL;
 
+/**
+ * add
+ * Create a Task and add it to the scheduler's list.
+ * Initializes timing metrics for later reporting.
+ */
 void add(char *name, int priority, int burst) {
     Task *task = malloc(sizeof(Task));
     task->name = strdup(name);
@@ -55,6 +65,11 @@ Task *pickNextTask() {
     return best;
 }
 
+/**
+ * schedule
+ * Execute the Priority scheduling loop until all tasks complete.
+ * Records each task's start and finish times for metrics.
+ */
 void schedule() {
     Task *task;
     int currentTime = 0;

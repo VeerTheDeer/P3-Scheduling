@@ -26,6 +26,15 @@ extern int metric_burst[];
 
 #define SIZE    100
 
+/**
+ * main
+ * Entry point for scheduling simulation.
+ * Opens the input file, parses tasks, runs the scheduler,
+ * and outputs CPU utilization and task metrics.
+ * @param argc Number of command-line arguments
+ * @param argv Array of argument strings (argv[1] is task file)
+ * @return Exit status (0 for success)
+ */
 int main(int argc, char *argv[])
 {
     FILE *in;
@@ -37,6 +46,7 @@ int main(int argc, char *argv[])
     int burst;
 
     in = fopen(argv[1],"r");
+    // Open the task definition file for reading
     
     while (fgets(task,SIZE,in) != NULL) {
         temp = strdup(task);
@@ -50,6 +60,7 @@ int main(int argc, char *argv[])
         free(temp);
     }
 
+    // Close the input file
     fclose(in);
 
     // invoke the scheduler
@@ -60,23 +71,27 @@ int main(int argc, char *argv[])
                   (total_cpu_time + total_dispatch_time);
     printf("CPU Utilization: %.2f%%\n", util);
 
+    // Print table header with task names
     printf("\n...|");
     for (int i = 0; i < task_count; i++) {
         printf(" %2s |", metric_names[i]);
     }
     printf("\n");
+    // Print Turn-Around Time for each task
     printf("TAT|");
     for (int i = 0; i < task_count; i++) {
         int tat = metric_finish[i] - metric_arrival[i];
         printf(" %2d |", tat);
     }
     printf("\n");
+    // Print Waiting Time for each task
     printf("WT |");
     for (int i = 0; i < task_count; i++) {
         int wt = (metric_finish[i] - metric_arrival[i]) - metric_burst[i];
         printf(" %2d |", wt);
     }
     printf("\n");
+    // Print Response Time for each task
     printf("RT |");
     for (int i = 0; i < task_count; i++) {
         int rt = metric_start[i] - metric_arrival[i];

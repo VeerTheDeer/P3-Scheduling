@@ -1,3 +1,8 @@
+/**
+ * schedule_fcfs.c
+ * Implements First-Come, First-Served scheduling.
+ * add(): enqueue tasks in arrival order; schedule(): execute in queue order.
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -16,7 +21,11 @@ extern int metric_burst[];
 
 struct node *g_head = NULL;
 
-// add a task to the list
+/**
+ * add
+ * Create a Task and enqueue it for FCFS execution.
+ * Initializes timing metrics for later reporting.
+ */
 void add(char *name, int priority, int burst) {
     Task *task = malloc(sizeof(Task));
     task->name = strdup(name);
@@ -61,7 +70,11 @@ Task *pickNextTask() {
     return task;
 }
 
-// run the scheduler
+/**
+ * schedule
+ * Execute the FCFS scheduling loop until all tasks complete.
+ * Records each task's start and finish times for metrics.
+ */
 void schedule() {
     Task *task;
     int currentTime = 0;

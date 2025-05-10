@@ -1,3 +1,8 @@
+/**
+ * schedule_priority_rr.c
+ * Implements Priority Round Robin scheduling.
+ * add(): enqueue tasks with metadata; schedule(): execute in priority-quantum slices.
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -18,6 +23,11 @@ extern int metric_burst[];
 
 struct node *g_head = NULL;
 
+/**
+ * add
+ * Create a Task and append it to the scheduler's queue.
+ * Initializes timing metrics for later reporting.
+ */
 void add(char *name, int priority, int burst) {
     Task *task = malloc(sizeof(Task));
     task->name = strdup(name);
@@ -47,6 +57,11 @@ int compareTasks(const void *a, const void *b) {
     return strcmp(ta->name, tb->name);
 }
 
+/**
+ * schedule
+ * Execute the Priority Round Robin scheduling loop until all tasks complete.
+ * Records each task's start and finish times for metrics.
+ */
 void schedule() {
     // move tasks into array and sort by priority/name
     Task *tasks[100];

@@ -1,6 +1,11 @@
 /**
  * "Virtual" CPU that also maintains track of system time.
  */
+/**
+ * CPU.c
+ * Simulates a virtual CPU with dispatch overhead tracking.
+ * Maintains global counters for CPU time, dispatch time, and run count.
+ */
 
 #include <stdio.h>
 
@@ -21,7 +26,13 @@ int metric_start[MAX_TASKS];
 int metric_finish[MAX_TASKS];
 int metric_burst[MAX_TASKS];
 
-// run this task for the specified time slice
+/**
+ * run
+ * Simulate execution of a task slice on the CPU.
+ * Applies a 1-unit dispatch overhead between task runs.
+ * @param task  Pointer to Task being executed
+ * @param slice Number of time units to run this task
+ */
 void run(Task *task, int slice) {
     // dispatch cost (1 unit) before each run after the first
     if (run_count > 0) {
